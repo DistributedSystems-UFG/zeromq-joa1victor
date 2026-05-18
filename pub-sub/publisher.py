@@ -2,13 +2,6 @@ import zmq
 import time
 import random
 
-# Publisher: publica leituras de sensores em dois tópicos distintos.
-#   TEMP → temperatura simulada (°C)
-#   HUM  → humidade simulada (%)
-#
-# Executa em máquina separada dos subscribers.
-# Uso: python3 publisher.py
-
 context = zmq.Context()
 socket  = context.socket(zmq.PUB)
 socket.bind("tcp://*:12345")
