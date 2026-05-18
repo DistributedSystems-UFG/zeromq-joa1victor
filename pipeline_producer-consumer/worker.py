@@ -1,12 +1,6 @@
 import zmq
 import sys
 
-# Worker (Consumer/Producer): recebe números do Producer, calcula o quadrado
-# e encaminha o resultado ao Consumer final.
-# Etapa 2 do pipeline: Producer → Worker → Consumer
-#
-# Uso: python3 worker.py <ip_producer> <ip_consumer>
-# Exemplo: python3 worker.py 172.31.62.117 172.31.56.99
 
 if len(sys.argv) < 3:
     print("Uso: python3 worker.py <ip_producer> <ip_consumer>")

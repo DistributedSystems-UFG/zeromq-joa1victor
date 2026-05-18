@@ -1,11 +1,5 @@
 import zmq
 
-# Consumer: recebe e exibe os resultados finais processados pelo Worker.
-# Etapa 3 do pipeline: Producer → Worker → Consumer
-#
-# Uso: python3 consumer.py
-# O Worker deve conectar ao IP desta máquina.
-
 context  = zmq.Context()
 receiver = context.socket(zmq.PULL)
 receiver.bind("tcp://*:5679")

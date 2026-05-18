@@ -1,12 +1,6 @@
 import zmq
 import math
 
-# Servidor: recebe um número do cliente e responde com o fatorial.
-# Executa em máquina separada do cliente.
-#
-# Uso: python3 server.py
-# O cliente conecta passando o IP deste servidor como argumento.
-
 context = zmq.Context()
 socket  = context.socket(zmq.REP)
 socket.bind("tcp://*:12345")

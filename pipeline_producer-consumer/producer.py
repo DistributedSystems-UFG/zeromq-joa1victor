@@ -1,25 +1,31 @@
 import zmq
-import random
-import time
+import sys
 
-# Producer: gera números aleatórios e os envia ao Worker para processamento.
-# Etapa 1 do pipeline: Producer → Worker → Consumer
-#
-# Uso: python3 producer.py
-# O Worker deve conectar ao IP desta máquina.
+if len(sys.argv) < 3:
+    print("Uso: python3 worker.py <ip_producer> <ip_consumer>")
+    sys.exit(1)
 
-context = zmq.Context()
-socket  = context.socket(zmq.PUSH)
-socket.bind("tcp://*:5678")
+producer_ip = sys.argv[1]
+consumer_ip = sys.argv[2]
 
-print("[Producer] Enviando tarefas na porta 5678...")
-print("[Producer] Aguarde o Worker conectar antes de iniciar.\n")
-time.sleep(2)
+context  = zmq.Context()
 
-for i in range(20):
-    number = random.randint(1, 10)
-    print(f"[Producer] Enviando número: {number}")
-    socket.send_string(str(number))
-    time.sleep(0.5)
+receiver = context.socket(zmq.PULL)
+receiver.connect(f"tcp://{producer_ip}:5678")
 
-print("[Producer] Todas as tarefas enviadas.")
+sender   = context.socket(zmq.PUSH)
+sender.connect(f"tcp://{consumer_ip}:5679")
+
+print(f"[Worker] Conectado ao Producer em {producer_ip}:5678")
+print(f"[Worker] Encaminhando resultados ao Consumer em {consumer_ip}:5679")
+print("[Worker] Aguardando tarefas... Pressione Ctrl+C para encerrar.\n")
+
+try:
+    while True:
+        number = int(receiver.recv_string())
+        result = number ** 2
+        print(f"[Worker] Recebeu: {number} → Calculou: {number}² = {result} → Encaminhando...")
+        sender.send_string(f"{number}:{result}")
+
+except KeyboardInterrupt:
+    print("\n[Worker] Encerrado.")
